@@ -6,7 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import LogInAnimation from "./Animation/LoginAnimation";
 import { addUser } from "../redux/services/userSlice";
-
+import PaginationButton from "./PaginationButton";
+import Sidebar from "./Navbar/Sidebar";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +38,8 @@ const Login = () => {
 
   return (
     <div className="">
-      hi
+      <PaginationButton />
+      <Sidebar />
     </div>
     // <div>
     //   <div className=" flex justify-center items-center h-screen relative">

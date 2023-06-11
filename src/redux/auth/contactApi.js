@@ -15,16 +15,7 @@ export const contactApi = createApi({
       }),
       providesTags: ["contact"],
     }),
-    getContactUserPage2: builder.query({
-      query: (token) => ({
-        url: "/contact?page=8",
-        method: "GET",
-        headers: { authorization: `Bearer ${token}` },
-      }),
-      providesTags: ["contact"],
-    }),
   }),
 });
 
-export const { useGetContactUserQuery, useGetContactUserPage2Query } =
-  contactApi;
+export const { useGetContactUserQuery } = contactApi;

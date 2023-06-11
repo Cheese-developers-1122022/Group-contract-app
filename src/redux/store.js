@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./auth/authApi";
-import userSlice from "./services/userSlice";
 import { contactApi } from "./auth/contactApi";
+import UserSlice from "./UserSlice";
+import userSlice from "./services/userSlice";
 export const store = configureStore({
   reducer: {
-    userSlice: userSlice,
+    userData: UserSlice,
+    user: userSlice,
     [authApi.reducerPath]: authApi.reducer,
     [contactApi.reducerPath]: contactApi.reducer,
   },
