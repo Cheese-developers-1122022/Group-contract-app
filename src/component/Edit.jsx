@@ -1,32 +1,53 @@
-import React, { useState } from "react";
-import { BsTelephone, BsArrowLeft, BsTrash, BsPencil } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import {
+  BsTelephone,
+  BsPersonWorkspace,
+  BsBuildings,
+  BsArrowLeft,
+  BsTrash,
+  BsPencil,
+  BsThreeDotsVertical,
+  BsImage,
+} from "react-icons/bs";
 import { BiImageAdd } from "react-icons/bi";
 import { TfiEmail } from "react-icons/tfi";
 import { SlCalender } from "react-icons/sl";
 import { RxPerson } from "react-icons/rx";
+import { FaTrash } from "react-icons/fa";
 import { GoLocation, GoNote } from "react-icons/go";
-import { Link, useNavigate } from "react-router-dom";
-import { Modal } from "@mantine/core";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Button, Menu, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ToastContainer, toast } from "react-toastify";
-import { useCreateContactMutation } from "../redux/auth/contactApi";
+import {
+  useGetSingleContactQuery,
+  useUpdateContactMutation,
+} from "../redux/auth/contactApi";
 import Cookies from "js-cookie";
 
-const CreateContact = () => {
-  const nav = useNavigate();
+const EditContact = () => {
   const [photo, setPhoto] = useState("");
+  // const [photo, setPhoto] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [birthday, setBirthday] = useState("");
   const [address, setAddress] = useState("");
-  const [job, setJob] = useState("");
-  const [company, setCompany] = useState("");
-  const [note, setNote] = useState("");
+  //   const [birthday, setBirthday] = useState("");
+  //   const [job, setJob] = useState("");
+  //   const [company, setCompany] = useState("");
+  //   const [note, setNote] = useState("");
+  const nav = useNavigate();
   const [openedImageModal, { open: openImageModal, close: closeImageModal }] =
     useDisclosure(false);
   const [openedEditModal, { open: openEditModal, close: closeEditModal }] =
     useDisclosure(false);
+
+  const { id } = useParams();
+  const token = Cookies.get("token");
+
+  const [updateContact] = useUpdateContactMutation();
+  const { data } = useGetSingleContactQuery({ id, token });
+  const user = data?.contact;
 
   const handleEdit = () => {
     closeEditModal();
@@ -37,20 +58,36 @@ const CreateContact = () => {
     setPhoto(null);
     closeEditModal();
   };
-  const token = Cookies.get("token");
-  const [createContact] = useCreateContactMutation();
+
+  useEffect(() => {
+    setPhoto(photo);
+  }, [photo]);
+
+  useEffect(() => {
+    setName(user?.name);
+    setEmail(user?.email);
+    setPhone(user?.phone);
+    setAddress(user?.address);
+  }, [user]);
+
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      const newContact = { name, email, phone, address, photo };
-      const { data } = await createContact({ token, contact: newContact });
+      const newData = {
+        id,
+        name,
+        phone,
+        email,
+        address,
+      };
+      const { data } = await updateContact({ token, newData });
       if (data?.success === true) {
-        nav("/");
-        toast.success("Contact created successfully", {
+        toast.success("Contact saved successfully", {
           autoClose: 1000,
         });
+        nav("/");
       } else if (data?.success === false || data === undefined) {
-        toast.error("Failed to create.Try again");
+        toast.error("Failed to save.Try again");
       }
     } catch (error) {
       console.log(error);
@@ -63,8 +100,8 @@ const CreateContact = () => {
     }
   };
   return (
-    <div className="">
-      <div className="max-w-5xl py-4 md:p-5 flex justify-center ">
+    <div className=" ">
+      <div className="max-w-6xl items-center mx-auto py-4 md:p-5 flex justify-center ">
         <div className="flex flex-col  ">
           <div className=" flex items-center justify-between">
             <button
@@ -73,16 +110,14 @@ const CreateContact = () => {
             >
               <BsArrowLeft className=" text-lg md:text-2xl hover:text-gray-700" />
             </button>
-
             <h1 className=" text-gray-800 font-semibold text-lg md:text-2xl ">
-              Create Contact
+              Edit Contact
             </h1>
           </div>
           <hr className=" border-b-5 mt-2 border-gray-500" />
           <div className=" mt-10">
             <div className="">
               <form
-                action=""
                 onSubmit={onSubmitHandler}
                 className=" flex flex-col gap-1  items-center   md:gap-3"
               >
@@ -121,7 +156,7 @@ const CreateContact = () => {
                               onChange={(e) => setPhoto(e.target.value)}
                             />
                             <button
-                              className=" px-4 py-1 text-white rounded-md bg-blue-600"
+                              className=" px-4 py-1 text-white rounded-md bg-[#54B435]"
                               onClick={closeImageModal}
                             >
                               Save
@@ -173,13 +208,28 @@ const CreateContact = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="hidden md:flex md:self-end">
+                  <div className="hidden md:flex md:items-center md:gap-3 md:self-end">
                     <button
-                      className=" px-6 py-1 bg-sky-500 text-white rounded-md"
+                      className=" px-6 py-1 bg-[#54B435] font-bold font-body text-white rounded-md"
                       type="submit"
                     >
-                      Create
+                      Save
                     </button>
+                    <Menu shadow="md" width={100}>
+                      <Menu.Target>
+                        <div className=" w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-full ">
+                          <BsThreeDotsVertical />
+                        </div>
+                      </Menu.Target>
+                      <Menu.Dropdown>
+                        <Menu.Item color="red" onClick={handleDiscard}>
+                          <div className=" flex  items-center gap-2">
+                            <FaTrash />
+                            <h3 className="">Discard</h3>
+                          </div>
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
                   </div>
                 </div>
                 <div className="flex flex-col  md:gap-1">
@@ -194,8 +244,25 @@ const CreateContact = () => {
                       value={name}
                       required
                       onChange={(e) => setName(e.target.value)}
-                      className={` w-[250px] md:w-[500px] xl:w-[600px] px-7 py-1 border border-gray-400 bg-white/30  rounded-md focus-visible:outline-blue-400 `}
+                      className="w-[250px] md:w-[500px] xl:w-[600px] px-7 py-1  border border-gray-400 bg-white/30 rounded-md focus-visible:outline-blue-400 "
                       placeholder="Enter name"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:gap-1">
+                  <label htmlFor="phone" className=" text-gray-500">
+                    Phone number
+                  </label>
+                  <div className=" relative ">
+                    <BsTelephone className=" absolute text-gray-500 top-2 left-2" />
+                    <input
+                      type="number"
+                      id="phone"
+                      value={phone}
+                      required
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-[250px] md:w-[500px] xl:w-[600px] px-7 py-1  border border-gray-400 bg-white/30 rounded-md focus-visible:outline-blue-400 "
+                      placeholder="Phone number"
                     />
                   </div>
                 </div>
@@ -216,23 +283,7 @@ const CreateContact = () => {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col md:gap-1">
-                  <label htmlFor="phone" className=" text-gray-500">
-                    Phone number
-                  </label>
-                  <div className=" relative ">
-                    <BsTelephone className=" absolute text-gray-500 top-2 left-2" />
-                    <input
-                      type="text"
-                      id="phone"
-                      value={phone}
-                      required
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-[250px] md:w-[500px] xl:w-[600px] px-7 py-1  border border-gray-400 bg-white/30 rounded-md focus-visible:outline-blue-400 "
-                      placeholder="Phone number"
-                    />
-                  </div>
-                </div>
+
                 <div className="flex flex-col md:gap-1">
                   <label htmlFor="address" className=" text-gray-500">
                     Address
@@ -250,12 +301,12 @@ const CreateContact = () => {
                     />
                   </div>
                 </div>
-                <div className="flex self-start mt-3   md:ml-0 md:hidden ">
+                <div className="flex self-start mt-3 gap-10 md:hidden">
                   <button
                     className=" px-6 py-1 bg-sky-500 text-white rounded-md"
                     type="submit"
                   >
-                    Create
+                    Save
                   </button>
                 </div>
               </form>
@@ -267,4 +318,5 @@ const CreateContact = () => {
     </div>
   );
 };
-export default CreateContact;
+
+export default EditContact;

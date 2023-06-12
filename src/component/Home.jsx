@@ -5,13 +5,12 @@ import ContactTable from "./Table/ContactTable";
 import PaginationButton from "./PaginationButton";
 const Home = () => {
   return (
-    <div className="">
-      <Navbar />
-      <div className=" flex ">
+    <div className=" bg-white dark:bg-[#3f3e3e]">
+      <Navbar/>
+      <div className=" flex">
         <Siderbar />
         <ContactTable />
       </div>
-      <PaginationButton />
     </div>
   );
 };

@@ -6,17 +6,40 @@ import { BiEdit } from "react-icons/bi";
 import { MdOutlineDelete } from "react-icons/md";
 import "./table.css";
 import { Badge, Menu, Tooltip } from "@mantine/core";
-import { useGetContactUserQuery } from "../../redux/auth/contactApi";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import { useDeleteContactMutation } from "../../redux/auth/contactApi";
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 const TableData = () => {
+  const token = Cookies.get("token");
+  const [deleteContact] = useDeleteContactMutation();
+
+  const deleteHandler = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      }
+      const data = await deleteContact({ id: id, token });
+    });
+  };
   const { userData } = useSelector((state) => state?.userData);
   const tr = userData?.map((data) => (
     <tr
       key={data?.id}
-      className=" shadow hover:bg-[#e0b5ad31] user cursor-pointer"
+      className=" shadow dark:shadow-[#58595a]   hover:bg-[#e0b5ad31] user cursor-pointer"
     >
-      <td className="px-3 text-left">
+      <td className="px-3 text-left  dark:text-white font-mono">
         <div className=" w-10  rounded-full">
           {data?.img ? (
             <img src={data?.img} className=" w-full rounded-full" />
@@ -27,35 +50,31 @@ const TableData = () => {
           )}
         </div>
       </td>
-      <td className="px-3 text-left">
+      <td className="px-3 text-left  dark:text-white font-mono">
         <div className=" py-5">
-          <p className=" text-gray-400 text-sm">Name</p>
           <p className=" ">{data?.name}</p>
         </div>
       </td>
-      <td className="px-3 text-left">
+      <td className="px-3 text-left  dark:text-white font-mono">
         {data?.email ? (
           <div className=" py-5">
-            <p className=" text-gray-400 text-sm">Email</p>
             <p>{data?.email}</p>
           </div>
         ) : (
           <div></div>
         )}
       </td>
-      <td className="px-3 text-left">
+      <td className="px-3 text-center  dark:text-white font-mono">
         <div className=" py-5">
-          <p className=" text-gray-400 text-sm">Phone Number</p>
           <p>{data?.phone}</p>
         </div>
       </td>
-      <td className="px-3 text-left">
+      <td className="px-3 text-left  dark:text-white font-mono">
         <div>
-          <p className=" text-gray-400 text-sm">Location</p>
           <p className=" first-letter:uppercase">{data?.address}</p>
         </div>
       </td>
-      <td className="px-3 text-left">
+      <td className="px-3 text-left  dark:text-white font-mono">
         {data?.job ? (
           <div className=" w-[94px] ">
             <p className=" text-center text-gray-400 text-sm "> Job</p>
@@ -68,25 +87,20 @@ const TableData = () => {
           <div></div>
         )}
       </td>
-      <td className="px-3 text-left">
+      <td className="px-3 text-left  dark:text-white font-mono">
         <div className=" action flex justify-center items-center gap-3">
-          <Tooltip
-            label="favorite"
-            position="bottom"
-            transitionProps={{ transition: "pop", duration: 300 }}
-          >
-            <button>
-              <AiOutlineStar />
-            </button>
-          </Tooltip>
           <Tooltip
             label="Detail"
             position="bottom"
             transitionProps={{ transition: "pop", duration: 300 }}
           >
-            <button>
-              <TbListDetails />
-            </button>
+            <div className="">
+              <Link to={`/detail/${data?.id}`}>
+                <button>
+                  <TbListDetails />
+                </button>
+              </Link>
+            </div>
           </Tooltip>
           <>
             <Menu
@@ -101,9 +115,14 @@ const TableData = () => {
                 </button>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Item icon={<BiEdit size={20} />}>Edit</Menu.Item>
-                <Menu.Item color="red" icon={<MdOutlineDelete size={20} />}>
-                  <p className="  pr-10">Delete</p>
+                <Menu.Item
+                  onClick={() => deleteHandler(data?.id)}
+                  color="red"
+                  icon={<MdOutlineDelete size={20} />}
+                >
+                  <div className="">
+                    <button className="pr-10">Delete</button>
+                  </div>
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>

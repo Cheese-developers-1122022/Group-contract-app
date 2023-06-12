@@ -5,23 +5,23 @@ const TableHead = () => {
     <>
       <thead>
         <tr>
-          <th className=" mr-5  rounded-lg      rounded-r    bg-slate-100 text-[#357686b7]  text-left py-5  px-3 uppercase"></th>
-          <th className=" mr-5  rounded-lg      rounded-r    bg-slate-100 text-[#357686b7]  text-left py-5  px-3 uppercase">
+          <th className=" mr-5     text-black dark:text-white  text-left py-5 font-mono  px-5 uppercase"></th>
+          <th className=" mr-5     text-black dark:text-white  text-left py-5 font-mono  px-5 uppercase">
             Name
           </th>
-          <th className=" mr-5  rounded-lg      rounded-r    bg-slate-100 text-[#357686b7]  px-3  text-left py-5 uppercase">
+          <th className=" mr-5     text-black dark:text-white  px-5  text-left py-5 font-mono uppercase">
             Email
           </th>
-          <th className=" mr-5   borer   rounded-lg   rounded-r    bg-slate-100 text-[#357686b7]  px-3  text-left py-5 uppercase">
+          <th className=" mr-5     text-black dark:text-white  px-1  text-left py-5 font-mono uppercase">
             Phone Number
           </th>
-          <th className=" mr-5     rounded-lg   rounded-r    bg-slate-100 text-[#357686b7]  px-3  text-left py-5 uppercase">
+          <th className=" mr-5     text-black dark:text-white  px-5  text-left py-5 font-mono uppercase">
             Location
           </th>
-          <th className=" mr-5     rounded-lg   rounded-r    bg-slate-100 text-[#357686b7]  px-3  text-left py-5 uppercase">
+          <th className=" mr-5     text-black dark:text-white  px-5  text-left py-5 font-mono uppercase">
             Job
           </th>
-          <th className=" mr-5     rounded-lg    rounded-r   bg-slate-100 text-[#357686b7]  px-3  text-left py-5 uppercase">
+          <th className=" mr-5     text-black dark:text-white  px-5  text-left py-5 font-mono uppercase">
             Actions
           </th>
         </tr>

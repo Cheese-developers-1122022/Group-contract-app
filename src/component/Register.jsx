@@ -21,7 +21,6 @@ const Register = () => {
     try {
       const registerData = { name, email, password, password_confirmation };
       const { data } = await register(registerData);
-      console.log(data);
       if (data?.success === true) {
         toast.success("Your account is registered successfully", {
           autoClose: 1000,
@@ -60,17 +59,17 @@ const Register = () => {
   return (
     <div>
       <div className=" flex justify-center items-center h-screen relative bg-white/50 ">
-        <div className=" bg-white/30 backdrop-blur-sm border  rounded-md p-3 md:p-5 shadow flex flex-col items-center gap-1 w-[350px] sm:w-[400px] md:w-[600px] xl:w-[700px] ">
-          <div className=" flex flex-col items-center ">
-            <h1 className=" text-2xl md:text-3xl font-semibold text-gray-800">
-              Register
-            </h1>
-            <p className=" text-gray-600 font-medium  md:text-lg text-center">
-              Register your account to continue.
-            </p>
-          </div>
-          <div className="flex items-center">
+        <div className=" bg-white/30 backdrop-blur-sm  rounded-md p-3 md:p-5 flex flex-col items-center gap-1 w-[350px] sm:w-[400px] md:w-[600px] xl:w-[700px] ">
+          <div className="flex items-center ">
             <div className="">
+              <div className="my-3 flex flex-col items-center ">
+                <h1 className=" text-2xl md:text-3xl font-semibold text-gray-800">
+                  Register
+                </h1>
+                <p className=" text-gray-600 font-medium  md:text-lg text-center">
+                  Register your account to continue.
+                </p>
+              </div>
               <form
                 action=""
                 onSubmit={onSubmitHandler}

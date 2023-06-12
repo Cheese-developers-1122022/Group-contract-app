@@ -16,7 +16,6 @@ export const DarkContextProvider = ({ children }) => {
   const lightSwitch = () => {
     setDarkTheme(darkTheme === "dark" ? "light" : "dark");
   };
-  console.log(darkTheme);
   const data = { setDarkTheme, darkTheme, lightSwitch };
   return <DarkContext.Provider value={data}>{children}</DarkContext.Provider>;
 };
